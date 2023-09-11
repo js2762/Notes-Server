@@ -49,7 +49,8 @@ mongoose.connect(mongoDbPath).then(function()
 
     app.post("/notes/delete", async function(req,res){
         await Note.deleteOne({id: req.body.id});
-        const response = { message: "Note Deleted Succesfully! " + `title: ${req.body.id}` }
+       // const response = { message: "Note Deleted Succesfully! " + `title: ${req.body.id}` }
+        const response = { message: "Note Deleted Succesfully! "}
         res.json(response);
     });
 

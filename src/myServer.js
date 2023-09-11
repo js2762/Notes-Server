@@ -25,16 +25,23 @@ mongoose.connect(mongoDbPath).then(function()
     app.post("/notes/add", async function(req,res) {
         // res.json(req.body);
 
-            await Note.deleteOne({ id: req.body.id });
-
-        const newNote = Note({
-            id: req.body.id,
-            title: req.body.title,
-            description: req.body.description,
-            scheduleDate: req.body.scheduleDate,
-            priorityValue: req.body.priorityValue,
-        });
-        await newNote.save();
+        const existingNote = await Note.findOne({ id: req.body.id });
+        if (existingNote) {
+            existingNote.title = req.body.title;
+            existingNote.description = req.body.description;
+            existingNote.scheduleDate = req.body.scheduleDate;
+            existingNote.priorityValue = req.body.priorityValue;
+            await existingNote.save();
+        } else {
+            const newNote = Note({
+                id: req.body.id,
+                title: req.body.title,
+                description: req.body.description,
+                scheduleDate: req.body.scheduleDate,
+                priorityValue: req.body.priorityValue,
+            });
+            await newNote.save();
+        }
 
         const response = { message: "New Note Created! " + `title: ${req.body.title}` }
         res.json(response);
